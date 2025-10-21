@@ -1,0 +1,85 @@
+@import "@fontsource/roboto/400.css";
+@import "@fontsource/roboto/500.css";
+@import "@fontsource/roboto/700.css";
+
+@import "tailwindcss";
+
+/* Tipografía base */
+html, body {
+  font-family: Arial, sans-serif;
+  color: #111827;
+  background-color: #f6f8fb;
+}
+
+/* Animaciones de entrada y movimiento */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(8px) }
+  to { opacity: 1; transform: translateY(0) }
+}
+@keyframes float {
+  0%,100% { transform: translateY(0) }
+  50% { transform: translateY(-6px) }
+}
+@keyframes scale-in {
+  from { transform: scale(.98); opacity: .8 }
+  to   { transform: scale(1);   opacity: 1 }
+}
+
+/* Efectos de hover en botones */
+@keyframes button-glow {
+  0% { box-shadow: 0 0 0 rgba(43,255,77,0) }
+  50% { box-shadow: 0 0 20px rgba(43,255,77,0.6) }
+  100% { box-shadow: 0 0 0 rgba(43,255,77,0) }
+}
+
+button:hover {
+  animation: button-glow 1.5s ease-in-out infinite;
+}
+
+/* Clases utilitarias */
+.animate-fade-in-up { animation: fade-in-up .5s ease-out both; }
+.animate-float { animation: float 5s ease-in-out infinite; }
+.animate-scale-in { animation: scale-in .25s ease-out both; }
+
+.delay-1 { animation-delay: .05s }
+.delay-2 { animation-delay: .10s }
+.delay-3 { animation-delay: .15s }
+
+
+/* === Extra animaciones para modales (sin @apply) === */
+@keyframes overlay-fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes modal-in { from { opacity: 0; transform: translateY(10px) scale(.98) }
+                      to   { opacity: 1; transform: translateY(0) scale(1) } }
+
+.animate-overlay-fade { animation: overlay-fade .25s ease-out both; }
+.animate-modal-in { animation: modal-in .28s cubic-bezier(.2,.8,.2,1) both; }
+
+/* === Estilos “glassmorphism” puros (reutilizables) === */
+.glass-card {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255,255,255,.60);
+  border: 1px solid rgba(255,255,255,.40);
+  border-radius: 28px;
+  box-shadow: 0 20px 60px -20px rgba(0,0,0,.35);
+}
+
+.glass-input {
+  width: 100%;
+  border-radius: 16px;
+  padding: 10px 12px;
+  font-size: 0.875rem; /* text-sm */
+  background: rgba(255,255,255,.60);
+  border: 1px solid rgba(255,255,255,.40);
+  outline: none;
+  color: #111827;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.glass-input::placeholder { color: rgba(17,24,39,.45); }
+.glass-input:focus {
+  background: rgba(255,255,255,.80);
+  border-color: rgba(255,255,255,.60);
+  box-shadow: 0 4px 18px rgba(17,24,39,.06);
+}
