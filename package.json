@@ -12,15 +12,21 @@
   "dependencies": {
     "@fontsource/roboto": "^5.2.8",
     "@hookform/resolvers": "^5.2.2",
+    "@supabase/supabase-js": "^2.76.1",
     "@tailwindcss/cli": "^4.1.15",
     "@tailwindcss/vite": "^4.1.15",
     "clsx": "^2.1.1",
+    "exceljs": "^4.4.0",
     "firebase": "^12.4.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.9.4",
     "recharts": "^3.3.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.12"
   },
   "devDependencies": {

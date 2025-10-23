@@ -1,15 +1,6 @@
 import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-  updateDoc,
-  type Unsubscribe,
+  addDoc, collection, deleteDoc, doc, getDoc, onSnapshot,
+  orderBy, query, serverTimestamp, updateDoc, type Unsubscribe
 } from "firebase/firestore";
 import { db } from "../../../lib/lib-firebase/app";
 
@@ -18,64 +9,84 @@ export type IncidentePayload = {
   datosGenerales: {
     reportadoPor: string;
     puestoDepartamento?: string;
-    fechaReporte: string;           // YYYY-MM-DD
+    fechaReporte: string;                 // YYYY-MM-DD
     incidenteNo?: string;
-    area?: string;                  // “Área” (campo general)
-    localizacion?: string;          // Localización específica
+    area: string;                         // Área general (para la lista)
+    localizacion?: string;
   };
   detalles: {
-    fechaIncidente: string;         // YYYY-MM-DD
-    horaIncidente: string;          // HH:mm
+    fechaIncidente: string;               // YYYY-MM-DD
+    horaIncidente: string;                // HH:mm
     tipoIncidente: "Seguridad" | "Ambiental" | "Daño a la propiedad";
-    severidad: "Menor" | "Moderado" | "Mayor" | "Crítico";
-    areaOcurrencia: string;         // área de ocurrencia
+    // Nueva clasificación solicitada
+    severidad: "Primeros Auxilios" | "Atención Médica" | "Tiempo pérdido" | "Fatal";
+    // áreaOcurrencia eliminado
   };
+
   personasAfectadas: Array<{
     nombre: string;
     puesto?: string;
-    tipoLesion?: string;
+    // tipoLesion eliminado
   }>;
+
+  /** Ahora ambas son listas dinámicas */
   areaPropiedadAfectada: {
-    areasAfectadas?: string;
-    propiedadAfectada?: string;
-    danoAmbiental?: string;
-    danoPropiedad?: string;
+    areasAfectadas: string[];             // dinámico
+    propiedadesAfectadas: string[];       // dinámico
   };
+
   testigos: Array<{
     nombre: string;
     puesto?: string;
   }>;
 
-  /** NUEVO: Relato libre del incidente */
+  /** Relato + imágenes (URLs públicas) */
   relatoIncidente?: string;
+  relatoImagenes?: string[];              // 0..4 URLs
 
-  accionesContencion: {
-    accionesTomadas?: string;       // ¿Qué acciones se tomaron?
-    medidas?: string;               // Medidas inmediatas/emergencia
-    recursos?: string;              // Recursos utilizados
-  };
+  /** Acciones de contención (dinámicas) */
+  accionesContencion: Array<{
+    descripcion: string;
+    fecha?: string;                       // YYYY-MM-DD
+    responsable?: string;
+  }>;
+
+  /** Acciones preventivas/correctivas/mejora (dinámicas) */
+  accionesPreventivas: Array<{
+    descripcion: string;
+    tipoAccion: "Preventiva" | "Correctiva" | "Mejora";
+    fechaCompromiso?: string;             // YYYY-MM-DD
+    fechaTermino?: string;                // YYYY-MM-DD
+    responsable?: string;
+  }>;
 };
 
 /** Lo que usa tu tabla/lista */
 export type IncidenteRow = {
   id?: string;
-  fecha: string;                    // YYYY-MM-DD (de fechaIncidente)
-  area: string;                     // de detalles.areaOcurrencia
+  fecha: string;                          // YYYY-MM-DD (de detalles.fechaIncidente)
+  area: string;                           // de datosGenerales.area
   tipo: "Incidente";
   estado: "Abierto" | "Cerrado";
-  severidad: "Alta" | "Media" | "Baja"; // mapeo desde (Menor/Moderado/Mayor/Crítico)
+  severidad: "Alta" | "Media" | "Baja";   // mapeo desde severidad nueva
   creadoEn?: any;
   actualizadoEn?: any;
-  payload: IncidentePayload;        // secciones completas
+  payload: IncidentePayload;              // secciones completas
 };
 
 const COL = "incidentes";
 
-function mapSeveridadToList(s: IncidentePayload["detalles"]["severidad"]): IncidenteRow["severidad"] {
-  if (s === "Menor") return "Baja";
-  if (s === "Moderado") return "Media";
-  // “Mayor” y “Crítico” se muestran como “Alta” en la lista
-  return "Alta";
+// Mapeo solicitado:
+// Primeros Auxilios -> Baja
+// Atención Médica   -> Media
+// Tiempo pérdido    -> Alta
+// Fatal             -> Alta
+function mapSeveridadToList(
+  s: IncidentePayload["detalles"]["severidad"]
+): IncidenteRow["severidad"] {
+  if (s === "Primeros Auxilios") return "Baja";
+  if (s === "Atención Médica") return "Media";
+  return "Alta"; // Tiempo pérdido y Fatal
 }
 
 export function suscribirIncidentes(cb: (rows: IncidenteRow[]) => void): Unsubscribe {
@@ -92,7 +103,7 @@ export async function crearIncidenteDesdePayload(
   opts?: { estado?: IncidenteRow["estado"] }
 ) {
   const fecha = payload.detalles.fechaIncidente;
-  const area = payload.detalles.areaOcurrencia;
+  const area = payload.datosGenerales.area;
   const severidad = mapSeveridadToList(payload.detalles.severidad);
   const estado: IncidenteRow["estado"] = opts?.estado ?? "Abierto";
 
@@ -121,7 +132,7 @@ export async function actualizarIncidenteConPayload(
   opts?: { estado?: IncidenteRow["estado"] }
 ) {
   const fecha = payload.detalles.fechaIncidente;
-  const area = payload.detalles.areaOcurrencia;
+  const area = payload.datosGenerales.area;
   const severidad = mapSeveridadToList(payload.detalles.severidad);
 
   await updateDoc(doc(db, COL, id), {

@@ -6,6 +6,8 @@ import Dashboard from "../modules/dashboard/pages/Dashboard";
 import RecordsList from "../modules/records/pages/RecordsList";
 import RecordDetail from "../modules/records/pages/RecordDetail";
 import Users from "../modules/users/pages/Users";
+import Circular from "@modules/circular/pages/Cirtuclar";
+import Resumenes from "@modules/summary/pages/Resumen";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -19,6 +21,8 @@ export const router = createBrowserRouter([
           { path: "/", element: <Dashboard /> },
           { path: "/dashboard", element: <Dashboard /> },
           { path: "/registros", element: <RecordsList /> },
+          { path: "/circular", element: <Circular /> },
+          { path: "/resumen", element: <Resumenes /> },
           { path: "/registros/:id", element: <RecordDetail /> },
           { path: "/usuarios", element: <Users /> },
         ],

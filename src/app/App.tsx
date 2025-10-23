@@ -35,6 +35,8 @@ export default function App() {
         <nav className="space-y-1">
           <SideItem to="/dashboard" icon={DashboardIcon} label="Dashboard" />
           <SideItem to="/registros" icon={BookIcon} label="Registro de Incidentes" />
+          <SideItem to="/circular" icon={MailIcon} label="Envio de circulares" />
+          <SideItem to="/resumen" icon={SummaryIcon} label="Gestor de resumenes" />
           <SideItem to="/usuarios" icon={UsersIcon} label="Gestión de Usuarios" />
         </nav>
 
@@ -131,6 +133,49 @@ function BookIcon(props: any) {
         strokeWidth="1.5"
       />
       <path d="M7 18V5" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
+function MailIcon(props: any) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" {...props}>
+      <path
+        d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4 7l8 6 8-6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+function SummaryIcon(props: any) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" {...props}>
+      <path
+        d="M6 3h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 3v5h5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8 11h8M8 15h5M8 19h8"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
