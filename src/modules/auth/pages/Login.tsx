@@ -39,7 +39,7 @@ export default function Login() {
           <div className="mb-7 grid place-items-center">
             <div className="relative">
               <img
-                src="/mina.png"
+                src="/oo_sil.png"
                 alt="Logo"
                 className="h-50 w-50 animate-float select-none"
                 onError={(e) => {
@@ -56,7 +56,7 @@ export default function Login() {
               </div>
             </div>
             <div className="mt-3 text-base font-semibold tracking-wide" style={{ fontFamily: "Arial, sans-serif" }}>
-              SEGUMIN
+              C E N T R A L &nbsp; &nbsp; S I L V E R
             </div>
           </div>
 
